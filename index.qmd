@@ -4,16 +4,15 @@ author: "Dabm"
 format: 
   html:
     toc: true
-    code-fold: show
-    
+    code-fold: false
 ---
 ```{r}
 # label : setup
-
+#  echo : false 
 ```
 
 
-## Quarto
+## Mi proyecto
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
