@@ -1,6 +1,6 @@
 ---
-title: "Mortality"
-author: "Dabm"
+title: "Mortality project"
+author: "Dabmp"
 format: 
   html:
     toc: true
@@ -22,7 +22,6 @@ When you click the **Render** button a document will be generated that includes 
 
 ```{r}
 #| echo: false
-
 1 + 1
 ```
 
