@@ -1,0 +1,79 @@
+---
+title: "Mortality project"
+author: "Dabmp"
+format: 
+  html:
+    toc: true
+    code-fold: false
+---
+```{r}
+# label : setup
+#  echo : false 
+```
+
+
+## Mi proyecto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+#| echo: false
+library(spdep)      # Pour l'autocorrélation spatiale et les modèles spatiaux
+library(sp)        # Pour manipuler les données spatiales
+library(sf)        # Pour lire les shapefiles
+library(spatialreg) # Pour les modèles SAR/SEM
+library(dplyr)     # Pour manipuler les données
+library(ggplot2)
+# library(gganimate) 
+
+ent_def <- readRDS("H:/Mon Drive/Broni/Projet R Mortality/ent_def.rds")
+
+#-----------------------------------------------
+setwd("H:/Mon Drive/Broni/Projet R Mortality/Shp")
+
+# Charger le shapefile
+ent<- st_read("00ent.shp")
+
+# Joindre avec shapefile (clé = CVEGEO ou CVE MUN)
+
+map_data <- ent %>%
+  left_join(ent_def, by = c("CVE_ENT" = "ent_ocurr")) 
+#-----------------------------------------------
+
+library(classInt)
+library(ggplot2)
+library(dplyr)
+
+map_data_filt <- map_data %>%
+  filter(anio_ocur %in% c(1990, 2000, 2010, 2020, 2024))
+
+# Calcul des breaks Jenks sur toutes les données filtrées (pour cohérence entre facettes)
+jenks_brks <- classIntervals(map_data_filt$pct_anio, 
+                             n = 5,  # Ajustez le nombre de classes
+                             style = "jenks")$brks
+
+ggplot(map_data_filt, aes(fill = pct_anio)) +
+  geom_sf(color = "grey", size = 0.1) +
+  # scale_fill_gradientn(
+  #   name = "Mortalité (%)",
+  #   colors = c("", "#FEE0D2", "#FC9272", "#DE2D26", "#8C2D04"),
+  #   breaks = jenks_brks
+  # ) 
+  scale_fill_distiller(name = "Mortalité (%)", type="seq", palette="RdYlBu", direction=-1, breaks = jenks_brks  ) +
+  facet_wrap(~anio_ocur, ncol = 3) +
+  theme_void() +
+  theme(legend.position = "bottom")
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
